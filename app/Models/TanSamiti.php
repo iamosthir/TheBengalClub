@@ -17,14 +17,15 @@ class TanSamiti extends Model
         'start_date',
         'status',
         'created_by_admin_id',
+        'created_by_user_id',
     ];
 
     protected $casts = [
-        'monthly_amount'      => 'decimal:2',
-        'total_cycles'        => 'integer',
+        'monthly_amount' => 'decimal:2',
+        'total_cycles' => 'integer',
         'enable_lottery_draw' => 'boolean',
-        'member_limit'        => 'integer',
-        'start_date'          => 'date',
+        'member_limit' => 'integer',
+        'start_date' => 'date',
     ];
 
     public function members()
@@ -52,9 +53,40 @@ class TanSamiti extends Model
         return $this->belongsTo(Admin::class, 'created_by_admin_id');
     }
 
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'created_by_user_id');
+    }
+
     public function isActive(): bool
     {
         return $this->status === 'active';
+    }
+
+    /**
+     * A private plan is one a member created for themselves — only the
+     * owner can see or join it.
+     */
+    public function isPrivate(): bool
+    {
+        return ! is_null($this->created_by_user_id);
+    }
+
+    public function isOwnedBy(?User $user): bool
+    {
+        return $user !== null && (int) $this->created_by_user_id === (int) $user->id;
+    }
+
+    /**
+     * Scope to plans the given user is allowed to see: all public
+     * (admin-created) plans plus the user's own private plans.
+     */
+    public function scopeVisibleTo($query, User $user)
+    {
+        return $query->where(function ($q) use ($user) {
+            $q->whereNull('created_by_user_id')
+                ->orWhere('created_by_user_id', $user->id);
+        });
     }
 
     public function lotteryEnabled(): bool
@@ -124,11 +156,11 @@ class TanSamiti extends Model
 
             TanSamitiInstallment::create([
                 'tan_samiti_id' => $this->id,
-                'user_id'       => $userId,
-                'cycle_number'  => $cycle,
-                'due_date'      => $baseDate->copy()->addMonths($cycle - 1)->toDateString(),
-                'amount'        => $this->monthly_amount,
-                'status'        => 'pending',
+                'user_id' => $userId,
+                'cycle_number' => $cycle,
+                'due_date' => $baseDate->copy()->addMonths($cycle - 1)->toDateString(),
+                'amount' => $this->monthly_amount,
+                'status' => 'pending',
             ]);
 
             $created++;

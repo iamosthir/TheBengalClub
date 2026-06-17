@@ -35,6 +35,8 @@ use App\Http\Controllers\Frontend\MemberDashboardController;
 use App\Http\Controllers\Frontend\MemberProfileController;
 use App\Http\Controllers\Frontend\HonoraryMemberController;
 use App\Http\Controllers\Frontend\DonationController;
+use App\Http\Controllers\Frontend\PaymentLinkController;
+use App\Http\Controllers\Admin\PaymentLinkController as AdminPaymentLinkController;
 use App\Http\Controllers\Admin\HonoraryMemberController as AdminHonoraryMemberController;
 use App\Http\Controllers\Admin\DonationController as AdminDonationController;
 use App\Http\Controllers\Admin\DonationCategoryController as AdminDonationCategoryController;
@@ -78,6 +80,10 @@ Route::get('/honorary-members', [HonoraryMemberController::class, 'index'])->nam
 Route::get('/donate', [DonationController::class, 'index'])->name('donate');
 Route::post('/donate', [DonationController::class, 'submit'])->name('donate.submit');
 
+// Public Payment Links
+Route::get('/pay/{token}', [PaymentLinkController::class, 'show'])->name('payment-link.show');
+Route::post('/pay/{token}', [PaymentLinkController::class, 'submit'])->name('payment-link.submit');
+
 // Invite Landing Page
 Route::get('/invites/{inviteId}', [MembershipApplicationController::class, 'showInviteForm'])->name('invites.show');
 Route::post('/invites/{inviteId}', [MembershipApplicationController::class, 'submitInvite'])->name('invites.submit');
@@ -114,6 +120,8 @@ Route::prefix('member')->name('member.')->group(function () {
 
         // Tan Samiti Routes
         Route::get('tan-samiti', [FrontendTanSamitiController::class, 'index'])->name('tan-samiti.index');
+        Route::get('tan-samiti/create', [FrontendTanSamitiController::class, 'createOwn'])->name('tan-samiti.create');
+        Route::post('tan-samiti', [FrontendTanSamitiController::class, 'storeOwn'])->name('tan-samiti.store');
         Route::get('tan-samiti/{tanSamiti}', [FrontendTanSamitiController::class, 'show'])->name('tan-samiti.show');
         Route::post('tan-samiti/{tanSamiti}/join', [FrontendTanSamitiController::class, 'join'])->name('tan-samiti.join');
         Route::get('tan-samiti/{tanSamiti}/agreement-pdf', [FrontendTanSamitiController::class, 'agreementPdf'])->name('tan-samiti.agreement-pdf');
@@ -162,6 +170,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('archive', ArchiveController::class)->except(['show']);
 
         // Events Routes
+        Route::delete('events/{event}/gallery-image', [EventController::class, 'destroyGalleryImage'])->name('events.gallery-image.destroy');
         Route::resource('events', EventController::class);
 
         // Event Registrations Routes
@@ -202,6 +211,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::post('/{installment}/reject', [PaymentRequestController::class, 'reject'])->name('reject');
             Route::delete('/{installment}', [PaymentRequestController::class, 'destroy'])->name('destroy');
         });
+
+        // Payment Links Routes
+        Route::post('payment-links/{paymentLink}/verify', [AdminPaymentLinkController::class, 'verify'])->name('payment-links.verify');
+        Route::post('payment-links/{paymentLink}/cancel', [AdminPaymentLinkController::class, 'cancel'])->name('payment-links.cancel');
+        Route::resource('payment-links', AdminPaymentLinkController::class)->except(['edit', 'update']);
 
         // Honorary Members Routes
         Route::resource('honorary-members', AdminHonoraryMemberController::class)->except(['show']);

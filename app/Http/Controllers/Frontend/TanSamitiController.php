@@ -17,8 +17,9 @@ class TanSamitiController extends Controller
         $user = auth()->user();
 
         $samitis = TanSamiti::where('status', 'active')
+            ->visibleTo($user)
             ->withCount('activeMembers')
-            ->with(['draws' => fn($q) => $q->latest('cycle_number')->limit(1)])
+            ->with(['draws' => fn ($q) => $q->latest('cycle_number')->limit(1)])
             ->latest()
             ->get();
 
@@ -30,6 +31,52 @@ class TanSamitiController extends Controller
         return view('frontend.pages.tan-samiti.index', compact('samitis', 'joinedIds'));
     }
 
+    public function createOwn()
+    {
+        return view('frontend.pages.tan-samiti.create');
+    }
+
+    public function storeOwn(Request $request)
+    {
+        $user = auth()->user();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:2000',
+            'monthly_amount' => 'required|numeric|min:500',
+            'total_cycles' => 'required|integer|min:1|max:12',
+            'start_date' => 'nullable|date|after_or_equal:today',
+        ], [
+            'monthly_amount.min' => 'The minimum amount is ৳500.',
+            'total_cycles.min' => 'Duration must be at least 1 month.',
+            'total_cycles.max' => 'Duration cannot exceed 12 months.',
+        ]);
+
+        $tanSamiti = TanSamiti::create([
+            'name' => $validated['name'],
+            'description' => $validated['description'] ?? null,
+            'monthly_amount' => $validated['monthly_amount'],
+            'total_cycles' => $validated['total_cycles'],
+            'enable_lottery_draw' => false,
+            'member_limit' => 1,
+            'start_date' => $validated['start_date'] ?? now()->toDateString(),
+            'status' => 'active',
+            'created_by_user_id' => $user->id,
+        ]);
+
+        // The owner is automatically enrolled in their own plan.
+        $tanSamiti->members()->create([
+            'user_id' => $user->id,
+            'status' => 'active',
+            'joined_at' => now(),
+        ]);
+
+        $tanSamiti->generateInstallmentsForUser($user->id);
+
+        return redirect()->route('member.tan-samiti.show', $tanSamiti)
+            ->with('success', 'Your private investment plan has been created!');
+    }
+
     public function show(TanSamiti $tanSamiti)
     {
         if (! $tanSamiti->isActive()) {
@@ -37,6 +84,11 @@ class TanSamitiController extends Controller
         }
 
         $user = auth()->user();
+
+        // Private (user-created) plans are only visible to their owner.
+        if ($tanSamiti->isPrivate() && ! $tanSamiti->isOwnedBy($user)) {
+            abort(404);
+        }
 
         $membership = $tanSamiti->members()
             ->where('user_id', $user->id)
@@ -71,6 +123,11 @@ class TanSamitiController extends Controller
 
         $user = auth()->user();
 
+        // Only the owner can join a private (user-created) plan.
+        if ($tanSamiti->isPrivate() && ! $tanSamiti->isOwnedBy($user)) {
+            abort(404);
+        }
+
         $exists = $tanSamiti->members()->where('user_id', $user->id)->exists();
 
         if ($exists) {
@@ -82,8 +139,8 @@ class TanSamitiController extends Controller
         }
 
         $tanSamiti->members()->create([
-            'user_id'   => $user->id,
-            'status'    => 'active',
+            'user_id' => $user->id,
+            'status' => 'active',
             'joined_at' => now(),
         ]);
 
@@ -113,15 +170,15 @@ class TanSamitiController extends Controller
         $settings = SiteSetting::firstOrCreate(['id' => 1]);
 
         $pdf = Pdf::loadView('pdf.tan-samiti-agreement', [
-            'tanSamiti'  => $tanSamiti,
-            'member'     => $user,
+            'tanSamiti' => $tanSamiti,
+            'member' => $user,
             'membership' => $membership,
-            'settings'   => $settings,
+            'settings' => $settings,
         ]);
 
         $pdf->setPaper('A4', 'portrait');
 
-        $filename = 'tan-samiti-agreement-' . $tanSamiti->id . '-member-' . $user->id . '.pdf';
+        $filename = 'tan-samiti-agreement-'.$tanSamiti->id.'-member-'.$user->id.'.pdf';
 
         return $pdf->download($filename);
     }
@@ -144,20 +201,20 @@ class TanSamitiController extends Controller
 
         $request->validate([
             'payment_method_id' => 'required|exists:payment_methods,id',
-            'txn_id'            => 'required|string|max:255',
-            'proof'             => 'required|image|mimes:png,jpg,jpeg|max:5120',
+            'txn_id' => 'required|string|max:255',
+            'proof' => 'required|image|mimes:png,jpg,jpeg|max:5120',
         ]);
 
         $proofPath = $request->file('proof')->store('tan-samiti-proofs', 'public');
 
         $installment->update([
             'member_payment_method_id' => $request->payment_method_id,
-            'member_txn_id'            => $request->txn_id,
-            'member_proof_path'        => $proofPath,
-            'member_submitted_at'      => now(),
-            'rejected_at'              => null,
-            'rejected_by_admin_id'     => null,
-            'rejection_reason'         => null,
+            'member_txn_id' => $request->txn_id,
+            'member_proof_path' => $proofPath,
+            'member_submitted_at' => now(),
+            'rejected_at' => null,
+            'rejected_by_admin_id' => null,
+            'rejection_reason' => null,
         ]);
 
         return response()->json([

@@ -45,7 +45,16 @@
                         @forelse($samitis as $samiti)
                         <tr>
                             <td>{{ $samiti->id }}</td>
-                            <td><strong>{{ $samiti->name }}</strong></td>
+                            <td>
+                                <strong>{{ $samiti->name }}</strong>
+                                @if($samiti->isPrivate())
+                                    <br>
+                                    <span class="badge badge-purple" style="background-color:#6f42c1;color:#fff;">
+                                        <i class="fas fa-lock"></i> Private
+                                    </span>
+                                    <small class="text-muted">by {{ $samiti->owner->name ?? 'user' }}</small>
+                                @endif
+                            </td>
                             <td>৳{{ number_format($samiti->monthly_amount, 2) }}</td>
                             <td>{{ $samiti->total_cycles }}</td>
                             <td>

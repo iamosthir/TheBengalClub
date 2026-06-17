@@ -131,16 +131,28 @@
                     </div>
 
                     @if($event->gallery_images && count($event->gallery_images) > 0)
-                        <div class="form-group">
-                            <label>Current Gallery Images ({{ count($event->gallery_images) }})</label>
+                        <div class="form-group" id="current-gallery-group">
+                            <label>Current Gallery Images (<span id="gallery-count">{{ count($event->gallery_images) }}</span>)</label>
+                            <small class="form-text text-muted mb-2">
+                                Click the <i class="fas fa-trash text-danger"></i> button on any image to remove it.
+                            </small>
                             <div class="border rounded p-2">
-                                <div class="row">
+                                <div class="row" id="current-gallery-grid">
                                     @foreach($event->gallery_images as $image)
-                                        <div class="col-md-3 mb-2">
-                                            <img src="{{ asset('storage/' . $image) }}"
-                                                 alt="Gallery Image"
-                                                 class="img-thumbnail"
-                                                 style="width: 100%; height: 150px; object-fit: cover;">
+                                        <div class="col-md-3 mb-3 gallery-item">
+                                            <div class="position-relative">
+                                                <img src="{{ asset('storage/' . $image) }}"
+                                                     alt="Gallery Image"
+                                                     class="img-thumbnail"
+                                                     style="width: 100%; height: 150px; object-fit: cover;">
+                                                <button type="button"
+                                                        class="btn btn-danger btn-sm delete-gallery-btn"
+                                                        data-image="{{ $image }}"
+                                                        style="position: absolute; top: 8px; right: 8px;"
+                                                        title="Delete this image">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     @endforeach
                                 </div>
@@ -149,7 +161,7 @@
                     @endif
 
                     <div class="form-group">
-                        <label for="gallery_images">{{ $event->gallery_images ? 'Replace Gallery Images' : 'Upload Gallery Images' }}</label>
+                        <label for="gallery_images">{{ $event->gallery_images ? 'Add More Gallery Images' : 'Upload Gallery Images' }}</label>
                         <div class="custom-file">
                             <input type="file" name="gallery_images[]" id="gallery_images"
                                    class="custom-file-input @error('gallery_images.*') is-invalid @enderror"
@@ -163,7 +175,7 @@
                         </div>
                         <small class="form-text text-muted">
                             Select multiple images for the event gallery. Formats: JPG, JPEG, PNG. Max: 5MB each.
-                            {{ $event->gallery_images ? 'Note: Uploading new images will replace all current gallery images.' : '' }}
+                            {{ $event->gallery_images ? 'New images will be added alongside the existing gallery images.' : '' }}
                         </small>
                     </div>
 
@@ -266,6 +278,78 @@ function toggleFeeField(checkbox) {
         document.getElementById('fee').value = '';
     }
 }
+
+// Delete an existing gallery image via AJAX
+document.querySelectorAll('.delete-gallery-btn').forEach(function (button) {
+    button.addEventListener('click', function () {
+        const btn = this;
+        const image = btn.dataset.image;
+
+        Swal.fire({
+            title: 'Delete this image?',
+            text: 'This action cannot be undone.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, delete it',
+            cancelButtonText: 'Cancel'
+        }).then(function (result) {
+            if (!result.isConfirmed) {
+                return;
+            }
+
+            btn.disabled = true;
+
+            fetch('{{ route('admin.events.gallery-image.destroy', $event->id) }}', {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({ image: image })
+            })
+            .then(function (response) { return response.json(); })
+            .then(function (data) {
+                if (data.success) {
+                    const item = btn.closest('.gallery-item');
+                    if (item) {
+                        item.remove();
+                    }
+
+                    // Update the displayed count / hide section when empty
+                    const remaining = document.querySelectorAll('#current-gallery-grid .gallery-item').length;
+                    const countEl = document.getElementById('gallery-count');
+                    if (countEl) {
+                        countEl.textContent = remaining;
+                    }
+                    if (remaining === 0) {
+                        const group = document.getElementById('current-gallery-group');
+                        if (group) {
+                            group.remove();
+                        }
+                    }
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted',
+                        text: data.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                } else {
+                    btn.disabled = false;
+                    Swal.fire({ icon: 'error', title: 'Error', text: data.message || 'Could not delete image.' });
+                }
+            })
+            .catch(function () {
+                btn.disabled = false;
+                Swal.fire({ icon: 'error', title: 'Error', text: 'Something went wrong. Please try again.' });
+            });
+        });
+    });
+});
 
 // Initialize Summernote
 $(document).ready(function() {

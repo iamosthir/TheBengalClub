@@ -27,17 +27,26 @@
         @endif
 
         {{-- Header --}}
-        <div class="bg-dark-800 rounded-2xl border border-white/10 p-6 mb-6">
-            <h1 class="text-2xl font-bold text-white flex items-center gap-3">
-                <span class="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center">
-                    <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                </span>
-                Investment Plan
-            </h1>
-            <p class="text-gray-400 text-sm mt-2 ml-13">Join a savings circle. Pay monthly, win the pot!</p>
+        <div class="bg-dark-800 rounded-2xl border border-white/10 p-6 mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-white flex items-center gap-3">
+                    <span class="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center">
+                        <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </span>
+                    Investment Plan
+                </h1>
+                <p class="text-gray-400 text-sm mt-2 ml-13">Join a savings circle, or create your own private plan.</p>
+            </div>
+            <a href="{{ route('member.tan-samiti.create') }}"
+               class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-yellow-500 text-black text-sm font-semibold hover:bg-yellow-400 transition-colors shrink-0">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                Create Your Own Plan
+            </a>
         </div>
 
         {{-- Samiti Cards --}}
@@ -46,8 +55,16 @@
         <div class="bg-dark-800 rounded-2xl border border-white/10 p-6 mb-4 hover:border-white/20 transition-colors">
             <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                 <div class="flex-1">
-                    <div class="flex items-center gap-2 mb-1">
+                    <div class="flex items-center gap-2 mb-1 flex-wrap">
                         <h2 class="text-lg font-semibold text-white">{{ $samiti->name }}</h2>
+                        @if($samiti->isPrivate())
+                            <span class="text-xs bg-purple-500/15 text-purple-300 border border-purple-500/30 rounded-full px-2 py-0.5 inline-flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                </svg>
+                                Private
+                            </span>
+                        @endif
                         @if($joined)
                             <span class="text-xs bg-green-500/15 text-green-400 border border-green-500/30 rounded-full px-2 py-0.5">Joined</span>
                         @endif

@@ -391,6 +391,19 @@
             </a>
           </li>
 
+          <li class="nav-item">
+            <a href="{{ route('admin.payment-links.index') }}" class="nav-link {{ Request::routeIs('admin.payment-links.*') ? 'active' : '' }}">
+              <i class="nav-icon fas fa-link"></i>
+              <p>
+                Payment Links
+                @php $submittedLinks = \App\Models\PaymentLink::where('status', 'submitted')->count(); @endphp
+                @if($submittedLinks > 0)
+                  <span class="badge badge-warning right">{{ $submittedLinks }}</span>
+                @endif
+              </p>
+            </a>
+          </li>
+
           <li class="nav-item {{ Request::routeIs('admin.products.*') ? 'menu-open' : '' }}">
             <a href="#" class="nav-link {{ Request::routeIs('admin.products.*') ? 'active' : '' }}">
               <i class="nav-icon fas fa-box-open"></i>

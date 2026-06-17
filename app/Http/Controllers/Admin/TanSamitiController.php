@@ -7,14 +7,15 @@ use App\Models\TanSamiti;
 use App\Models\TanSamitiInstallment;
 use App\Models\TanSamitiMember;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class TanSamitiController extends Controller
 {
     public function index()
     {
         $samitis = TanSamiti::withCount(['activeMembers', 'draws'])
+            ->with('owner')
             ->latest()
             ->paginate(20);
 
@@ -29,14 +30,14 @@ class TanSamitiController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'                => 'required|string|max:255',
-            'description'         => 'nullable|string|max:2000',
-            'monthly_amount'      => 'required|numeric|min:1',
-            'total_cycles'        => 'required|integer|min:2|max:500',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:2000',
+            'monthly_amount' => 'required|numeric|min:1',
+            'total_cycles' => 'required|integer|min:2|max:500',
             'enable_lottery_draw' => 'nullable|boolean',
-            'member_limit'        => 'nullable|integer|min:1|max:10000',
-            'start_date'          => 'required|date',
-            'status'              => 'required|in:active,inactive',
+            'member_limit' => 'nullable|integer|min:1|max:10000',
+            'start_date' => 'required|date',
+            'status' => 'required|in:active,inactive',
         ]);
 
         $validated['enable_lottery_draw'] = $request->boolean('enable_lottery_draw');
@@ -86,14 +87,14 @@ class TanSamitiController extends Controller
     public function update(Request $request, TanSamiti $tanSamiti)
     {
         $validated = $request->validate([
-            'name'                => 'required|string|max:255',
-            'description'         => 'nullable|string|max:2000',
-            'monthly_amount'      => 'required|numeric|min:1',
-            'total_cycles'        => 'required|integer|min:2|max:500',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:2000',
+            'monthly_amount' => 'required|numeric|min:1',
+            'total_cycles' => 'required|integer|min:2|max:500',
             'enable_lottery_draw' => 'nullable|boolean',
-            'member_limit'        => 'nullable|integer|min:1|max:10000',
-            'start_date'          => 'required|date',
-            'status'              => 'required|in:active,inactive',
+            'member_limit' => 'nullable|integer|min:1|max:10000',
+            'start_date' => 'required|date',
+            'status' => 'required|in:active,inactive',
         ]);
 
         $validated['enable_lottery_draw'] = $request->boolean('enable_lottery_draw');
@@ -138,8 +139,8 @@ class TanSamitiController extends Controller
         }
 
         $tanSamiti->members()->create([
-            'user_id'   => $request->user_id,
-            'status'    => 'active',
+            'user_id' => $request->user_id,
+            'status' => 'active',
             'joined_at' => now(),
         ]);
 
@@ -168,8 +169,8 @@ class TanSamitiController extends Controller
         switch ($request->input('status', 'submitted')) {
             case 'submitted':
                 $query->where('status', 'pending')
-                      ->whereNotNull('member_submitted_at')
-                      ->whereNull('rejected_at');
+                    ->whereNotNull('member_submitted_at')
+                    ->whereNull('rejected_at');
                 break;
             case 'completed':
                 $query->where('status', 'completed');
@@ -179,12 +180,12 @@ class TanSamitiController extends Controller
                 break;
             case 'pending':
                 $query->where('status', 'pending')
-                      ->whereNull('member_submitted_at')
-                      ->whereNull('rejected_at');
+                    ->whereNull('member_submitted_at')
+                    ->whereNull('rejected_at');
                 break;
             case 'overdue':
                 $query->where('status', 'pending')
-                      ->where('due_date', '<', now()->startOfDay());
+                    ->where('due_date', '<', now()->startOfDay());
                 break;
             default:
                 // All — no filter
@@ -200,7 +201,7 @@ class TanSamitiController extends Controller
         if ($request->filled('user')) {
             $search = $request->input('user');
             $query->whereHas('user', fn ($q) => $q->where('name', 'like', "%{$search}%")
-                                                   ->orWhere('email', 'like', "%{$search}%"));
+                ->orWhere('email', 'like', "%{$search}%"));
         }
 
         // Date range (due_date)
@@ -212,7 +213,7 @@ class TanSamitiController extends Controller
         }
 
         $requests = $query->paginate(20)->withQueryString();
-        $samitis  = TanSamiti::orderBy('name')->get(['id', 'name']);
+        $samitis = TanSamiti::orderBy('name')->get(['id', 'name']);
 
         return view('admin.pages.tan-samiti.payment-requests', compact('requests', 'samitis'));
     }
@@ -224,10 +225,10 @@ class TanSamitiController extends Controller
         }
 
         $installment->update([
-            'status'                => 'completed',
-            'paid_at'               => now(),
+            'status' => 'completed',
+            'paid_at' => now(),
             'completed_by_admin_id' => auth('admin')->id(),
-            'note'                  => $request->input('note'),
+            'note' => $request->input('note'),
         ]);
 
         return back()->with('success', 'Payment approved successfully.');
@@ -237,13 +238,13 @@ class TanSamitiController extends Controller
     {
         $installment->update([
             'member_payment_method_id' => null,
-            'member_txn_id'            => null,
-            'member_proof_path'        => null,
-            'member_submitted_at'      => null,
-            'rejected_at'              => now(),
-            'rejected_by_admin_id'     => auth('admin')->id(),
-            'rejection_reason'         => $request->input('rejection_reason'),
-            'note'                     => $request->input('note'),
+            'member_txn_id' => null,
+            'member_proof_path' => null,
+            'member_submitted_at' => null,
+            'rejected_at' => now(),
+            'rejected_by_admin_id' => auth('admin')->id(),
+            'rejection_reason' => $request->input('rejection_reason'),
+            'note' => $request->input('note'),
         ]);
 
         return back()->with('success', 'Payment rejected.');

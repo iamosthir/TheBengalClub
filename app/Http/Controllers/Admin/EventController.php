@@ -117,20 +117,13 @@ class EventController extends Controller
             $validated['thumbnail_path'] = $request->file('thumbnail')->store('events/thumbnails', 'public');
         }
 
-        // Handle gallery images upload
+        // Append any newly uploaded gallery images to the existing ones
         if ($request->hasFile('gallery_images')) {
-            // Delete old gallery images if exists
-            if ($event->gallery_images) {
-                foreach ($event->gallery_images as $oldImage) {
-                    Storage::disk('public')->delete($oldImage);
-                }
-            }
-
-            $galleryPaths = [];
+            $galleryImages = $event->gallery_images ?? [];
             foreach ($request->file('gallery_images') as $image) {
-                $galleryPaths[] = $image->store('events/gallery', 'public');
+                $galleryImages[] = $image->store('events/gallery', 'public');
             }
-            $validated['gallery_images'] = $galleryPaths;
+            $validated['gallery_images'] = array_values($galleryImages);
         }
 
         // Handle status and fee checkboxes
@@ -148,6 +141,38 @@ class EventController extends Controller
 
         return redirect()->route('admin.events.index')
             ->with('success', 'Event updated successfully.');
+    }
+
+    /**
+     * Remove a single gallery image from an event.
+     */
+    public function destroyGalleryImage(Request $request, Event $event)
+    {
+        $validated = $request->validate([
+            'image' => 'required|string',
+        ]);
+
+        $galleryImages = $event->gallery_images ?? [];
+
+        if (! in_array($validated['image'], $galleryImages, true)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Image not found in this event gallery.',
+            ], 404);
+        }
+
+        Storage::disk('public')->delete($validated['image']);
+
+        $event->update([
+            'gallery_images' => array_values(
+                array_filter($galleryImages, fn ($img) => $img !== $validated['image'])
+            ),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Gallery image deleted successfully.',
+        ]);
     }
 
     /**
