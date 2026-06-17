@@ -137,10 +137,12 @@
                             <p class="text-white font-semibold">{{ $user->profile->membershipCategory->duration }}</p>
                         </div>
                     @endif
-                    <div class="bg-dark-700 rounded-xl p-4 border border-white/5">
-                        <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Monthly Fee</p>
-                        <p class="text-accent font-bold text-lg">৳{{ number_format($user->profile->membershipCategory->price, 2) }}</p>
-                    </div>
+                    @if($user->profile->membershipCategory->duration !== 'Lifetime')
+                        <div class="bg-dark-700 rounded-xl p-4 border border-white/5">
+                            <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Monthly Fee</p>
+                            <p class="text-accent font-bold text-lg">৳{{ number_format($user->profile->membershipCategory->price, 2) }}</p>
+                        </div>
+                    @endif
                     <div class="bg-dark-700 rounded-xl p-4 border border-white/5">
                         <p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Member Since</p>
                         <p class="text-white font-semibold">{{ $user->created_at->format('F j, Y') }}</p>
