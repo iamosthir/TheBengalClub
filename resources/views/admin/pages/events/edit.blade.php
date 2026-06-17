@@ -1,5 +1,9 @@
 @extends("admin.layouts.master")
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/summernote-dark.css') }}">
+@endpush
+
 @section("content")
 <div class="row">
     <div class="col-12">
@@ -51,10 +55,10 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="date">Event Date <span class="text-danger">*</span></label>
-                                <input type="date" name="date" id="date"
+                                <label for="date">Event Date & Time <span class="text-danger">*</span></label>
+                                <input type="datetime-local" name="date" id="date"
                                        class="form-control @error('date') is-invalid @enderror"
-                                       value="{{ old('date', $event->date->format('Y-m-d')) }}"
+                                       value="{{ old('date', $event->date->format('Y-m-d\TH:i')) }}"
                                        required>
                                 @error('date')
                                     <span class="invalid-feedback">{{ $message }}</span>

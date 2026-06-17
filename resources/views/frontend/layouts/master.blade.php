@@ -179,7 +179,9 @@
     <link rel="stylesheet" href="{{ asset('css/newsletter.css') }}">
     <link rel="stylesheet" href="{{ asset('css/contact.css') }}">
     <link rel="stylesheet" href="{{ asset('css/archive.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/footer.css') }}"
+    <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
+
+    @stack('styles')
 </head>
 <body class="bg-dark-900 text-white font-sans overflow-x-hidden">
 

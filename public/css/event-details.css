@@ -277,6 +277,24 @@
 .event-description-content {
     font-size: 1.125rem;
     line-height: 1.8;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* Inherit the light base color for all typed content (paragraphs, lists,
+   spans, bold/italic, tables, quotes) so it's readable on the dark theme.
+   Headings and links keep their own colors defined below. */
+.event-description-content p,
+.event-description-content ul,
+.event-description-content ol,
+.event-description-content li,
+.event-description-content span,
+.event-description-content strong,
+.event-description-content b,
+.event-description-content em,
+.event-description-content blockquote,
+.event-description-content td,
+.event-description-content th {
+    color: inherit;
 }
 
 .event-description-content h1,

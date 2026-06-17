@@ -1,58 +1,7 @@
 @extends("admin.layouts.master")
 
 @push('styles')
-<style>
-/* Summernote Dark Mode Styles */
-body.dark-mode .note-editor.note-frame {
-    background-color: #343a40;
-    border-color: #454d55;
-}
-
-body.dark-mode .note-editor .note-toolbar {
-    background-color: #343a40;
-    border-bottom-color: #454d55;
-}
-
-body.dark-mode .note-editor .note-editing-area .note-editable {
-    background-color: #454d55;
-    color: #ffffff !important;
-}
-
-body.dark-mode .note-editor .note-editing-area .note-editable p,
-body.dark-mode .note-editor .note-editing-area .note-editable div,
-body.dark-mode .note-editor .note-editing-area .note-editable span,
-body.dark-mode .note-editor .note-editing-area .note-editable li {
-    color: #ffffff !important;
-}
-
-body.dark-mode .note-editor .note-statusbar {
-    background-color: #343a40;
-    border-top-color: #454d55;
-}
-
-body.dark-mode .note-btn {
-    background-color: #454d55;
-    color: #ffffff;
-    border-color: #6c757d;
-}
-
-body.dark-mode .note-btn:hover {
-    background-color: #5a6268;
-}
-
-body.dark-mode .dropdown-menu {
-    background-color: #343a40;
-    border-color: #454d55;
-}
-
-body.dark-mode .dropdown-item {
-    color: #ffffff;
-}
-
-body.dark-mode .dropdown-item:hover {
-    background-color: #454d55;
-}
-</style>
+<link rel="stylesheet" href="{{ asset('css/summernote-dark.css') }}">
 @endpush
 
 @section("content")
@@ -96,8 +45,8 @@ body.dark-mode .dropdown-item:hover {
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="date">Event Date <span class="text-danger">*</span></label>
-                                <input type="date" name="date" id="date"
+                                <label for="date">Event Date & Time <span class="text-danger">*</span></label>
+                                <input type="datetime-local" name="date" id="date"
                                        class="form-control @error('date') is-invalid @enderror"
                                        value="{{ old('date') }}"
                                        required>

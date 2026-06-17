@@ -28,7 +28,7 @@
                         <div class="mb-4">
                             <p class="mb-2">
                                 <i class="fas fa-calendar-alt text-primary mr-2"></i>
-                                <strong>Date:</strong> {{ $event->date->format('l, F j, Y') }}
+                                <strong>Date:</strong> {{ $event->date->format('l, F j, Y') }} at {{ $event->date->format('g:i A') }}
                             </p>
                             <p class="mb-2">
                                 <i class="fas fa-map-marker-alt text-danger mr-2"></i>

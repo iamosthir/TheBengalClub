@@ -1,0 +1,98 @@
+/*
+ * Dark Summernote editor — makes the editing canvas mirror the dark public
+ * website so authored content is WYSIWYG (you see roughly what members see).
+ * Applies regardless of the admin panel's light/dark mode.
+ */
+
+.note-editor.note-frame,
+.note-editor.note-airframe {
+    background-color: #1a1a1a;
+    border-color: #333333;
+}
+
+.note-editor .note-toolbar {
+    background-color: #1a1a1a;
+    border-bottom-color: #333333;
+}
+
+.note-editor .note-statusbar {
+    background-color: #1a1a1a;
+    border-top-color: #333333;
+}
+
+.note-editor .note-statusbar .note-resizebar {
+    border-top-color: #444444;
+}
+
+/* The editing canvas — matches the event details page background/text. */
+.note-editor .note-editing-area .note-editable {
+    background-color: #0d0d0d;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.note-editor .note-editing-area .note-editable p,
+.note-editor .note-editing-area .note-editable div,
+.note-editor .note-editing-area .note-editable span,
+.note-editor .note-editing-area .note-editable ul,
+.note-editor .note-editing-area .note-editable ol,
+.note-editor .note-editing-area .note-editable li,
+.note-editor .note-editing-area .note-editable strong,
+.note-editor .note-editing-area .note-editable b,
+.note-editor .note-editing-area .note-editable em,
+.note-editor .note-editing-area .note-editable blockquote {
+    color: inherit;
+}
+
+.note-editor .note-editing-area .note-editable h1,
+.note-editor .note-editing-area .note-editable h2,
+.note-editor .note-editing-area .note-editable h3,
+.note-editor .note-editing-area .note-editable h4,
+.note-editor .note-editing-area .note-editable h5,
+.note-editor .note-editing-area .note-editable h6 {
+    color: #ffffff;
+}
+
+.note-editor .note-editing-area .note-editable a {
+    color: #0f70bf;
+}
+
+.note-editor .note-editing-area .note-placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* Code view (raw HTML) textarea. */
+.note-editor .note-codable {
+    background-color: #0d0d0d;
+    color: #e0e0e0;
+}
+
+/* Toolbar buttons and dropdowns tuned for the dark chrome. */
+.note-editor .note-btn {
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    border-color: #444444;
+}
+
+.note-editor .note-btn:hover,
+.note-editor .note-btn.active {
+    background-color: #3a3a3a;
+    color: #ffffff;
+}
+
+.note-editor .dropdown-menu {
+    background-color: #1f1f1f;
+    border-color: #333333;
+}
+
+.note-editor .dropdown-menu .dropdown-item,
+.note-editor .dropdown-menu a,
+.note-editor .dropdown-menu li > a {
+    color: #e0e0e0;
+}
+
+.note-editor .dropdown-menu .dropdown-item:hover,
+.note-editor .dropdown-menu a:hover,
+.note-editor .dropdown-menu li > a:hover {
+    background-color: #2f2f2f;
+    color: #ffffff;
+}
