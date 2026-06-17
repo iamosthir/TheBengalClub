@@ -1,0 +1,214 @@
+/* =====================================================
+   FACILITIES.CSS - Facilities & Amenities Section Styles
+   ===================================================== */
+
+/* Facilities Section */
+.facilities-section {
+    background: var(--dark-800);
+    position: relative;
+}
+
+/* Background Pattern */
+.facilities-bg-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(circle at 20% 20%, rgba(15, 112, 191, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(15, 112, 191, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Facilities Grid */
+.facilities-grid {
+    position: relative;
+    z-index: 2;
+}
+
+/* Facility Card */
+.facility-card {
+    background: var(--dark-700);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+}
+
+.facility-card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(15, 112, 191, 0.3);
+    box-shadow: 0 20px 60px rgba(15, 112, 191, 0.15);
+}
+
+/* Facility Image */
+.facility-image {
+    position: relative;
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+}
+
+.facility-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.facility-card:hover .facility-image img {
+    transform: scale(1.1);
+}
+
+/* Facility Overlay */
+.facility-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(10, 10, 10, 0.8) 100%);
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 1.5rem;
+}
+
+.facility-badge {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: var(--white);
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(15, 112, 191, 0.3);
+}
+
+/* Facility Content */
+.facility-content {
+    padding: 2rem;
+}
+
+/* Facility Icon */
+.facility-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, rgba(15, 112, 191, 0.1), rgba(15, 112, 191, 0.05));
+    border: 1px solid rgba(15, 112, 191, 0.2);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    transition: all 0.4s ease;
+}
+
+.facility-card:hover .facility-icon {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: var(--white);
+    transform: rotateY(360deg);
+    box-shadow: 0 8px 25px rgba(15, 112, 191, 0.3);
+}
+
+/* Facility Title */
+.facility-title {
+    font-size: 1.375rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.75rem;
+    font-family: var(--font-display);
+}
+
+/* Facility Description */
+.facility-description {
+    color: var(--gray-400);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+/* Facility Features */
+.facility-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.facility-features li {
+    color: var(--gray-400);
+    font-size: 0.875rem;
+    padding-left: 1.75rem;
+    position: relative;
+}
+
+.facility-features li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(15, 112, 191, 0.5);
+}
+
+/* Hover Animations */
+.facility-card:hover .facility-features li {
+    animation: slideInRight 0.3s ease forwards;
+}
+
+.facility-card:hover .facility-features li:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.facility-card:hover .facility-features li:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.facility-card:hover .facility-features li:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .facilities-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .facilities-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .facility-image {
+        height: 200px;
+    }
+
+    .facility-content {
+        padding: 1.5rem;
+    }
+
+    .facility-title {
+        font-size: 1.25rem;
+    }
+}

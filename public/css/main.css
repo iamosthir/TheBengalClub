@@ -1,0 +1,420 @@
+/* =====================================================
+   MAIN.CSS - Base Styles, Variables & Custom Cursor
+   ===================================================== */
+
+/* CSS Variables */
+:root {
+    --accent: #0f70bf;
+    --accent-dark: #0a5a9c;
+    --accent-light: #1a8fe0;
+    --accent-glow: rgba(15, 112, 191, 0.3);
+    --dark-900: #0a0a0a;
+    --dark-800: #111111;
+    --dark-700: #1a1a1a;
+    --dark-600: #222222;
+    --dark-500: #2a2a2a;
+    --white: #ffffff;
+    --gray-100: #f5f5f5;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    --transition-slower: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Base Reset & Typography */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: var(--dark-900);
+    color: var(--white);
+    line-height: 1.6;
+    cursor: none;
+    overflow-x: hidden;
+}
+
+/* Hide default cursor on interactive elements */
+a, button, input, select, textarea,
+.nav-link, .btn-primary, .btn-outline,
+.banner-arrow, .banner-dot {
+    cursor: none;
+}
+
+/* Custom Cursor */
+.cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    background-color: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, opacity 0.3s ease;
+    opacity: 1;
+}
+
+.cursor-outline {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease-out, width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+    opacity: 0.5;
+}
+
+/* Cursor hover states */
+.cursor-hover .cursor-dot {
+    transform: translate(-50%, -50%) scale(0.5);
+    background-color: var(--white);
+}
+
+.cursor-hover .cursor-outline {
+    width: 60px;
+    height: 60px;
+    border-color: var(--accent-light);
+    opacity: 0.8;
+}
+
+/* Cursor click state */
+.cursor-click .cursor-dot {
+    transform: translate(-50%, -50%) scale(2);
+}
+
+.cursor-click .cursor-outline {
+    transform: translate(-50%, -50%) scale(0.8);
+}
+
+/* Hide cursor on mobile/touch devices */
+@media (hover: none) and (pointer: coarse) {
+    .cursor-dot,
+    .cursor-outline {
+        display: none;
+    }
+
+    body,
+    a, button, input, select, textarea {
+        cursor: auto;
+    }
+}
+
+/* Selection */
+::selection {
+    background-color: var(--accent);
+    color: var(--white);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark-800);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--dark-500);
+    border-radius: 5px;
+    transition: background var(--transition-normal);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+/* Common Typography */
+.section-caption {
+    display: inline-block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    position: relative;
+    padding-left: 50px;
+}
+
+.section-caption::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 35px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+}
+
+.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    color: var(--white);
+}
+
+.section-text {
+    font-size: 1.125rem;
+    color: var(--gray-400);
+    line-height: 1.8;
+    margin-bottom: 1rem;
+}
+
+/* Buttons */
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    border-radius: 50px;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition-normal);
+    box-shadow: 0 4px 20px rgba(15, 112, 191, 0.3);
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(15, 112, 191, 0.5);
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+.btn-primary:active {
+    transform: translateY(-1px);
+}
+
+.btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    background: transparent;
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 2px solid var(--accent);
+    border-radius: 50px;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition-normal);
+}
+
+.btn-outline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: var(--accent);
+    transition: width var(--transition-normal);
+    z-index: -1;
+}
+
+.btn-outline:hover {
+    color: var(--white);
+    border-color: var(--accent);
+    transform: translateY(-3px);
+}
+
+.btn-outline:hover::before {
+    width: 100%;
+}
+
+/* Reveal Animations */
+.reveal-up,
+.reveal-left,
+.reveal-right {
+    opacity: 0;
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-up {
+    transform: translateY(60px);
+}
+
+.reveal-left {
+    transform: translateX(-60px);
+}
+
+.reveal-right {
+    transform: translateX(60px);
+}
+
+.reveal-up.revealed,
+.reveal-left.revealed,
+.reveal-right.revealed {
+    opacity: 1;
+    transform: translate(0);
+}
+
+/* Stagger delay for children */
+.reveal-up[style*="--delay"],
+.reveal-left[style*="--delay"],
+.reveal-right[style*="--delay"] {
+    transition-delay: var(--delay);
+}
+
+/* Magnetic Effect for buttons */
+.magnetic {
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Glow effect */
+.glow-effect {
+    position: relative;
+}
+
+.glow-effect::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+    pointer-events: none;
+    z-index: -1;
+}
+
+.glow-effect:hover::after {
+    opacity: 1;
+}
+
+/* Loading Animation */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Utility Classes */
+.text-accent {
+    color: var(--accent);
+}
+
+.bg-accent {
+    background-color: var(--accent);
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, var(--accent-light), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Responsive Container */
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+/* Image lazy load placeholder */
+img {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+img[data-src] {
+    opacity: 0;
+}
+
+img.loaded {
+    opacity: 1;
+}
+
+.mt-30 {
+    margin-top: 30px;
+}

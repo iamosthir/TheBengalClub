@@ -1,0 +1,213 @@
+/* =====================================================
+   DIRECTORS.CSS - Board of Directors Marquee Slider
+   ===================================================== */
+
+/* Directors Section */
+.directors-section {
+    background: var(--dark-800);
+    position: relative;
+}
+
+/* Marquee Container */
+.directors-marquee {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    padding: 2rem 0;
+}
+
+/* Fade edges */
+.directors-marquee::before,
+.directors-marquee::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 150px;
+    height: 100%;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.directors-marquee::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--dark-800) 0%, transparent 100%);
+}
+
+.directors-marquee::after {
+    right: 0;
+    background: linear-gradient(-90deg, var(--dark-800) 0%, transparent 100%);
+}
+
+/* Marquee Track */
+.marquee-track {
+    display: flex;
+    gap: 2rem;
+    animation: marqueeScroll 40s linear infinite;
+    width: max-content;
+}
+
+.marquee-track:hover {
+    animation-play-state: paused;
+}
+
+@keyframes marqueeScroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Director Card */
+.director-card {
+    flex-shrink: 0;
+    width: 280px;
+    text-align: center;
+    transition: transform 0.4s ease;
+}
+
+.director-card:hover {
+    transform: translateY(-10px);
+}
+
+/* Director Image */
+.director-image {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+}
+
+.director-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.5s ease;
+}
+
+.director-card:hover .director-image img {
+    transform: scale(1.1);
+}
+
+/* Director Overlay */
+.director-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        transparent 50%,
+        rgba(15, 112, 191, 0.9) 100%
+    );
+    opacity: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 2rem;
+    transition: opacity 0.4s ease;
+}
+
+.director-card:hover .director-overlay {
+    opacity: 1;
+}
+
+/* Director Socials */
+.director-socials {
+    display: flex;
+    gap: 0.75rem;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: all 0.4s ease 0.1s;
+}
+
+.director-card:hover .director-socials {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.social-link {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    background: var(--white);
+    color: var(--accent);
+    transform: scale(1.1);
+}
+
+/* Director Info */
+.director-info h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 0.25rem;
+    transition: color 0.3s ease;
+}
+
+.director-card:hover .director-info h4 {
+    color: var(--accent);
+}
+
+.director-info p {
+    font-size: 0.875rem;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .director-card {
+        width: 240px;
+    }
+
+    .director-image {
+        height: 280px;
+    }
+
+    .directors-marquee::before,
+    .directors-marquee::after {
+        width: 80px;
+    }
+}
+
+@media (max-width: 768px) {
+    .director-card {
+        width: 200px;
+    }
+
+    .director-image {
+        height: 240px;
+        border-radius: 16px;
+    }
+
+    .marquee-track {
+        gap: 1.5rem;
+    }
+
+    .directors-marquee::before,
+    .directors-marquee::after {
+        width: 50px;
+    }
+
+    .director-info h4 {
+        font-size: 1.1rem;
+    }
+}

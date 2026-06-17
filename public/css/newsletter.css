@@ -1,0 +1,163 @@
+/* =====================================================
+   NEWSLETTER.CSS - Newsletter Subscription Section
+   ===================================================== */
+
+/* Newsletter Section */
+.newsletter-section {
+    background: var(--dark-800);
+    position: relative;
+}
+
+/* Background Pattern */
+.newsletter-pattern {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+}
+
+/* Newsletter Glow */
+.newsletter-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 400px;
+    background: radial-gradient(ellipse, rgba(15, 112, 191, 0.15) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* Newsletter Wrapper */
+.newsletter-wrapper {
+    position: relative;
+}
+
+/* Newsletter Form */
+.newsletter-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.newsletter-form .form-group {
+    display: flex;
+    gap: 0;
+    background: var(--dark-700);
+    border: 2px solid var(--dark-500);
+    border-radius: 60px;
+    padding: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.newsletter-form .form-group:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 30px rgba(15, 112, 191, 0.2);
+}
+
+/* Newsletter Input */
+.newsletter-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    color: var(--white);
+}
+
+.newsletter-input::placeholder {
+    color: var(--gray-500);
+}
+
+/* Newsletter Button */
+.newsletter-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    border: none;
+    border-radius: 50px;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--white);
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.newsletter-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.newsletter-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(15, 112, 191, 0.4);
+}
+
+.newsletter-btn:hover::before {
+    left: 100%;
+}
+
+.newsletter-btn svg {
+    transition: transform 0.3s ease;
+}
+
+.newsletter-btn:hover svg {
+    transform: translateX(3px);
+}
+
+/* Form Note */
+.form-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
+    color: var(--gray-500);
+}
+
+.form-note svg {
+    color: var(--accent);
+}
+
+/* Success State */
+.newsletter-form.success .form-group {
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .newsletter-form .form-group {
+        flex-direction: column;
+        border-radius: 20px;
+        padding: 0.75rem;
+    }
+
+    .newsletter-input {
+        padding: 1rem;
+        text-align: center;
+    }
+
+    .newsletter-btn {
+        width: 100%;
+        justify-content: center;
+        border-radius: 12px;
+    }
+}
