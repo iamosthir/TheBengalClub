@@ -197,7 +197,9 @@ class RegisteredMemberController extends Controller
             'profession_organization' => 'required|string|max:255',
             'address' => 'required|string',
             'membership_category_id' => 'required|exists:membership_categories,id',
-            'manual_member_id' => 'nullable|string|max:255',
+            'manual_member_id' => 'nullable|string|max:255|unique:user_profiles,manual_member_id,'.$user->profile->id,
+        ], [
+            'manual_member_id.unique' => 'This Member ID is already assigned to another member.',
         ]);
 
         try {

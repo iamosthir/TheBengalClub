@@ -156,9 +156,16 @@ function initHeaderSearch() {
         }
     });
 
-    // Re-evaluate desktop vs mobile on resize
+    // Re-evaluate desktop vs mobile on resize.
+    // Only react to WIDTH changes (orientation / breakpoint switch) — opening the
+    // mobile keyboard fires a resize with a height-only change, which must NOT
+    // close the search bar.
+    let lastWidth = window.innerWidth;
     window.addEventListener('resize', () => {
-        closeSearch();
+        if (window.innerWidth !== lastWidth) {
+            lastWidth = window.innerWidth;
+            closeSearch();
+        }
     });
 }
 
