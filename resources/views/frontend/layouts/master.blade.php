@@ -10,9 +10,26 @@
     <title>{{ $seoSetting?->meta_title ?? ($siteSetting?->site_name ?? 'The Bengal Club') }} @if(!$seoSetting?->meta_title && $siteSetting?->site_tagline) - {{ $siteSetting->site_tagline }} @endif</title>
     @endif
 
+    {{-- Favicon / Google search result icon.
+         Google uses the homepage favicon as the icon shown next to the site name in
+         search results; it must be a square image. seo_logo.jpeg is 1254×1254. The
+         admin-set favicon (if any) is kept as the small, crisp browser-tab icon. --}}
     @if($siteSetting?->favicon)
-        <link rel="icon" type="image/x-icon" href="{{ asset('storage/' . $siteSetting->favicon) }}">
+        <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="{{ asset('storage/' . $siteSetting->favicon) }}">
     @endif
+    <link rel="icon" type="image/jpeg" sizes="any" href="{{ asset('seo/seo_logo.jpeg') }}">
+    <link rel="apple-touch-icon" href="{{ asset('seo/seo_logo.jpeg') }}">
+
+    {{-- Organization structured data — helps Google associate the logo with the brand --}}
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": {!! json_encode($siteSetting?->site_name ?? 'The Bengal Club') !!},
+        "url": {!! json_encode(url('/')) !!},
+        "logo": {!! json_encode(asset('seo/seo_logo.jpeg')) !!}
+    }
+    </script>
 
     {{-- Page-specific meta (pushed before global tags so they take precedence for crawlers) --}}
     @stack('head_meta')
